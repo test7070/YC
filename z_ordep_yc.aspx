@@ -35,11 +35,17 @@
                         type : '8',
 						name : 'isprice',
                         value : '1@單價'.split(',') 
+                    },{//[5] 104/10/15 客戶名稱顯示
+                        type : '8',
+						name : 'iscust',
+                        value : '1@客戶'.split(',') 
                     }]
                 });
                 q_popAssign();
                 q_getFormat();
                 q_langShow();
+                
+                $('#chkIscust [value="1"]').prop("checked",true);
                 
                 var t_para = new Array();
 	            try{
