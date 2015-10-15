@@ -23,7 +23,7 @@
 			var q_name = "orde";
 			var q_readonly = ['txtNoa','txtApv', 'txtWorker', 'txtWorker2', 'txtComp', 'txtAcomp', 'txtMoney', 'txtTax', 'txtTotal', 'txtSales', 'txtOrdbno', 'txtOrdcno','txtWeight'];
 			var q_readonlys = ['txtTotal', 'txtQuatno', 'txtNo2', 'txtNo3', 'txtC1', 'txtNotv'];
-			var bbmNum = [['txtTotal', 10, 0, 1], ['txtMoney', 10, 0, 1], ['txtTax', 10, 0, 1]];
+			var bbmNum = [['txtPrice', 7, 3, 0],['txtTotal', 10, 0, 1], ['txtMoney', 10, 0, 1], ['txtTax', 10, 0, 1]];
 			var bbsNum = [];
 			var bbmMask = [];
 			var bbsMask = [];
