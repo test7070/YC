@@ -200,6 +200,8 @@
 						q_gt('custaddr', t_where, 0, 0, 0, "");
 						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 						q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
+						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
+						q_gt('custm', t_where, 0, 0, 0, "custm");
 					}
 				});
 				
@@ -487,6 +489,13 @@
 						}
 						$('#combAddr').text('')
 						q_cmbParse("combAddr", t_item);
+						break;
+					case 'custm':
+						var as = _q_appendData("custm", "", true);
+						if (as[0] != undefined) {
+							if(as[0].taxtype!='' || as[0].taxtype!=undefined)
+								$('#cmbTaxtype').val(as[0].taxtype);
+						}
 						break;
 					case 'orde':
 						var as = _q_appendData("orde", "", true);
@@ -1050,6 +1059,8 @@
 							q_gt('custaddr', t_where, 0, 0, 0, "");
 							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 							q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
+							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
+							q_gt('custm', t_where, 0, 0, 0, "custm");
 						}
 						bbsGetOrdeList();
 						break;
