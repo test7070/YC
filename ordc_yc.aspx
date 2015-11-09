@@ -655,13 +655,6 @@
 			
 			function q_funcPost(t_func, result) {
 				switch(t_func) {
-					case 'qtxt.query.ordc_ucc':
-						//var as = _q_appendData("tmp0", "", true, true);
-						var s2=[];
-						s2[0]=q_name + '_s';
-						s2[1]="where=^^ noa<='"+$('#txtNoa').val()+"' ^^"
-						q_boxClose2(s2);
-						break;
 					default:
 						break;
 				}
