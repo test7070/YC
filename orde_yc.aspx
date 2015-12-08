@@ -1567,7 +1567,7 @@
 					<tr class="tr11">
 						<td class="td1"><span> </span><a id='lblMemo' class='lbl'> </a></td>
 						<td class="td2" colspan='5'>
-							<textarea id="txtMemo" cols="10" rows="5" style="width: 99%;height: 50px;"> </textarea>
+							<textarea id="txtMemo" cols="10" rows="5" style="width: 99%;height: 50px;line-height: 20px;"> </textarea>
 						</td>
 						<td><input id="btnApv" type="button" style="width:70%;float:right;" value="核准"/></td>
                         <td><input id="txtApv" type="text" class="txt c1" disabled="disabled"/></td>
@@ -1609,9 +1609,9 @@
 						<input class="txt c6" id="txtNo2.*" type="text" />
 					</td>
 					<td>
-						<input class="txt c7" id="txtProduct.*" type="text" />
+						<input class="txt c7" id="txtProduct.*" type="text" style="line-height:20px;" />
 						<input id="txtSpec.*" type="text" class="txt c1 isSpec"/>
-						<input class="btn" id="btnS1.*" type="button" value='∮' style="font-size: 10px;" />
+						<input class="btn" id="btnS1.*" type="button" value='∮' style="font-size: 10px;padding: 2px 5px;height: 24px;line-height: 20px;" />
 					</td>
 					<td class="isStyle"><input id="txtStyle.*" type="text" class="txt c1 isStyle"/></td>
 					<td align="center"><input class="txt c7" id="txtUnit.*" type="text"/></td>
