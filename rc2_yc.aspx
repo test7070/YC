@@ -1169,14 +1169,14 @@
 						<input class="btn" id="btnMinus.*" type="button" value='－' style=" font-weight: bold;" />
 					</td>
 					<td>
-						<input id="txtProductno.*" type="text" class="txt c1"/>
+						<input id="txtProductno.*" type="text" class="txt c1" style="line-height:20px;"/>
 						<input class="btn" id="btnProductno.*" type="button" value='.' style="font-weight: bold;" />
 						<input id="txtNoq.*" type="text" class="txt c6"/>
 					</td>
 					<td>
 						<input type="text" id="txtProduct.*" class="txt c1"/>
 						<input type="text" id="txtSpec.*" class="txt c1 isSpec"/>
-						<input class="btn" id="btnS1.*" type="button" value='∮' style="font-size: 10px;float: left;" />
+						<input class="btn" id="btnS1.*" type="button" value='∮' style="font-size: 10px;float: left;padding: 2px 5px;height: 24px;line-height: 20px;" />
 					</td>
 					<td class="isStyle"><input id="txtStyle.*" type="text" class="txt c1"/></td>
 					<td><input id="txtUnit.*" type="text" class="txt c1"/></td>
