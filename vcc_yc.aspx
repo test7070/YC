@@ -200,6 +200,8 @@
 						q_gt('custaddr', t_where, 0, 0, 0, "");
 						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 						q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
+						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
+						q_gt('custm', t_where, 0, 0, 0, "custm");
 					}
 				});
 				
@@ -487,6 +489,13 @@
 						}
 						$('#combAddr').text('')
 						q_cmbParse("combAddr", t_item);
+						break;
+					case 'custm':
+						var as = _q_appendData("custm", "", true);
+						if (as[0] != undefined) {
+							if(as[0].taxtype!='' || as[0].taxtype!=undefined)
+								$('#cmbTaxtype').val(as[0].taxtype);
+						}
 						break;
 					case 'orde':
 						var as = _q_appendData("orde", "", true);
@@ -834,7 +843,8 @@
 							t_IdSeq = -1;
 							q_bodyId($(this).attr('id'));
 							b_seq = t_IdSeq;
-							t_where = "cust='" + $('#txtCustno').val() + "' and noq='" + $('#txtProductno_' + b_seq).val() + "'";
+							//t_where = "cust='" + $('#txtCustno').val() + "' and noq='" + $('#txtProductno_' + b_seq).val() + "'";
+							t_where = "custno='" + $('#txtCustno').val() + "' and comp='" + $('#txtComp').val() + "' and productno='" + $('#txtProductno_' + b_seq).val() + "' and product='" + $('#txtProduct_' + b_seq).val() + "'";
 							q_box("z_vccrecord.aspx?" + r_userno + ";" + r_name + ";" + q_time + ";" + t_where, 'vccrecord', "95%", "95%", q_getMsg('lblRecord_s'));
 						});
 						
@@ -1050,6 +1060,8 @@
 							q_gt('custaddr', t_where, 0, 0, 0, "");
 							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 							q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
+							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
+							q_gt('custm', t_where, 0, 0, 0, "custm");
 						}
 						bbsGetOrdeList();
 						break;

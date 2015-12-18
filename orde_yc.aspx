@@ -145,6 +145,8 @@
 						q_gt('custaddr', t_where, 0, 0, 0, "");
 						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 						q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
+						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
+						q_gt('custm', t_where, 0, 0, 0, "custm");
 					}
 				});
 
@@ -497,6 +499,13 @@
 						$('#combAddr').text('')
 						q_cmbParse("combAddr", t_item);
 						break;
+					case 'custm':
+						var as = _q_appendData("custm", "", true);
+						if (as[0] != undefined) {
+							if(as[0].taxtype!='' || as[0].taxtype!=undefined)
+								$('#cmbTaxtype').val(as[0].taxtype);
+						}
+						break;	
 					case 'quat':
 						var as = _q_appendData("quat", "", true);
 						if (as[0] != undefined) {
@@ -886,7 +895,7 @@
 							t_IdSeq = -1;
 							q_bodyId($(this).attr('id'));
 							b_seq = t_IdSeq;
-							t_where = "custno='" + $('#txtCustno').val() + "' and comp='" + $('#txtComp').val() + "' and productno='" + $('#txtProductno_' + b_seq).val() + "' and product='" + $('#txtProduct_' + b_seq).val() + "'";
+							t_where = "custno='" + $('#txtCustno').val() + "' and comp='" + $('#txtComp').val() + "' and productno='" + $('#txtProductno_' + b_seq).val() + "' and product='" + $('#txtProduct_' + b_seq).val() + "' and ordeno='"+$('#txtNoa').val()+"' and no2='"+$('#txtNo2_'+b_seq).val()+"' ";
 							q_box("z_vccrecord.aspx?" + r_userno + ";" + r_name + ";" + q_time + ";" + t_where, 'vccrecord', "95%", "95%", q_getMsg('lblRecord_s'));
 						});
 						
@@ -1142,6 +1151,8 @@
 							q_gt('custaddr', t_where, 0, 0, 0, "");
 							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 							q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
+							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
+							q_gt('custm', t_where, 0, 0, 0, "custm");
 						}
 						break;
 				}
@@ -1556,7 +1567,7 @@
 					<tr class="tr11">
 						<td class="td1"><span> </span><a id='lblMemo' class='lbl'> </a></td>
 						<td class="td2" colspan='5'>
-							<textarea id="txtMemo" cols="10" rows="5" style="width: 99%;height: 50px;"> </textarea>
+							<textarea id="txtMemo" cols="10" rows="5" style="width: 99%;height: 50px;line-height: 20px;"> </textarea>
 						</td>
 						<td><input id="btnApv" type="button" style="width:70%;float:right;" value="核准"/></td>
                         <td><input id="txtApv" type="text" class="txt c1" disabled="disabled"/></td>
@@ -1598,9 +1609,9 @@
 						<input class="txt c6" id="txtNo2.*" type="text" />
 					</td>
 					<td>
-						<input class="txt c7" id="txtProduct.*" type="text" />
+						<input class="txt c7" id="txtProduct.*" type="text" style="line-height:20px;" />
 						<input id="txtSpec.*" type="text" class="txt c1 isSpec"/>
-						<input class="btn" id="btnS1.*" type="button" value='∮' style="font-size: 10px;" />
+						<input class="btn" id="btnS1.*" type="button" value='∮' style="font-size: 10px;padding: 2px 5px;height: 24px;line-height: 20px;" />
 					</td>
 					<td class="isStyle"><input id="txtStyle.*" type="text" class="txt c1 isStyle"/></td>
 					<td align="center"><input class="txt c7" id="txtUnit.*" type="text"/></td>
