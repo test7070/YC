@@ -139,6 +139,7 @@ z_vccp_yc02:--z_vccp_yc02
 		tel nvarchar(50),
 		serial nvarchar(100),
 		sales nvarchar(100),
+		paytype nvarchar(100),
 		
 		productno nvarchar(30),
 		product nvarchar(50),
@@ -160,7 +161,7 @@ z_vccp_yc02:--z_vccp_yc02
 	insert into @tmp
 	select '1' gno,ROW_NUMBER()over(partition by a.noa order by b.noq) recno
 	,a.cno,a.acomp,a.noa,b.noq,a.datea,a.custno,a.comp
-	,case when isnull(a.addr2,'')!='' then a.addr2 else a.addr end,a.tel,c.serial,a.sales
+	,case when isnull(a.addr2,'')!='' then a.addr2 else a.addr end,a.tel,c.serial,a.sales,a.paytype
 	
 	,b.productno,replace(b.product,'~#$',char(39)),b.unit
 	,case when @t_showweight='1' then b.mount else b.lengthc end
