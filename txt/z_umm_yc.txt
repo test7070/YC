@@ -36,6 +36,7 @@ declare @result table(
 	serial nvarchar(90),
 	addr nvarchar(90),
 	tel nvarchar(90),
+	paytype nvarchar(100),
 	productno nvarchar(MAX),
 	xproduct nvarchar(MAX),
 	unit nvarchar(8),
@@ -57,7 +58,8 @@ declare @result table(
 
 	insert into @result
 	select '0' gno, a.typea, a.noa noa, b.noq noq, a.datea datea, (case when isnull(a.mon,'')='' then left(a.datea,6) else a.mon end) mon,
-		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end) custno, isnull(c.comp,''),c.serial, isnull(c.addr_comp,''), isnull(c.tel,''), b.productno, b.product, b.unit,
+		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end) custno, isnull(c.comp,''),c.serial, isnull(c.addr_comp,''), isnull(c.tel,''),c.paytype
+		   , b.productno, b.product, b.unit,
 	       b.mount, b.weight, b.price, b.total, 0 money, 0 back, 0 tax, 0 total1, 0 pay, 0 unpay, 0 total2
 	       ,(case when isnull(a.salesno2,'')!='' then a.salesno2 when isnull(a.salesno,'')!='' then a.salesno else isnull(c.salesno,'') end) salesno
 			,(case when isnull(a.salesno2,'')!='' then a.sales2 when isnull(a.salesno,'')!='' then a.sales else c.sales end)sales 
@@ -71,7 +73,7 @@ declare @result table(
 		  (b.productno between @t_bproductno and @t_eproductno) and (len(@t_cno)=0 or a.cno=@t_cno)
 	union all --無發票系統
 	select '0' gno, '稅' typea, a.noa, CHAR(255) noq, a.datea, (case when isnull(a.mon,'')='' then left(a.datea,6) else a.mon end),
-		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end), '' comp,'' serial, '' addr_comp, '' tel, '' productno, '稅額' product, '' unit,
+		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end), '' comp,'' serial, '' addr_comp, '' tel, '' paytype, '' productno, '稅額' product, '' unit,
 		   0 mount, 0 weight, 0 price, (case when a.typea!='1' then -1 else 1 end) * tax, 0 money, 0 back, 0 tax, 0 total1, 0 pay, 0 unpay, 0 total2
 		   ,(case when isnull(a.salesno2,'')!='' then a.salesno2 when isnull(a.salesno,'')!='' then a.salesno else isnull(c.salesno,'') end) salesno
 			,(case when isnull(a.salesno2,'')!='' then a.sales2 when isnull(a.salesno,'')!='' then a.sales else c.sales end)sales 
@@ -85,7 +87,7 @@ declare @result table(
 		  and (len(@t_cno)=0 or a.cno=@t_cno)
 	union all --有發票系統
 	select '0' gno, '稅' typea, a.noa, '' noq, a.datea, (case when isnull(a.mon,'')='' then left(a.datea,6) else a.mon end),
-		   a.custno, '' comp,'' serial, '' addr_comp, '' tel, '' productno, '稅額' product, '' unit,
+		   a.custno, '' comp,'' serial, '' addr_comp, '' tel, '' paytype, '' productno, '稅額' product, '' unit,
 		   0 mount, 0 weight, 0 price, a.tax, 0 money, 0 back, 0 tax, 0 total1, 0 pay, 0 unpay, 0 total2
 		   ,c.salesno,c.sales
 	from vcca a left join cust c on a.custno = c.noa
@@ -97,7 +99,7 @@ declare @result table(
 	--義橋
 	union all --折扣
 	select '0' gno, '折' typea, a.noa, '999' noq, a.datea, (case when isnull(a.mon,'')='' then left(a.datea,6) else a.mon end),
-		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end), '' comp,'' serial, '' addr_comp, '' tel, '' productno, '折讓' product, '' unit,
+		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end), '' comp,'' serial, '' addr_comp, '' tel, '' paytype, '' productno, '折讓' product, '' unit,
 		   0 mount, 0 weight, 0 price, (case when a.typea!='1' then 1 else -1 end) * a.discount, 0 money, 0 back, 0 tax, 0 total1, 0 pay, 0 unpay, 0 total2
 		   ,(case when isnull(a.salesno2,'')!='' then a.salesno2 when isnull(a.salesno,'')!='' then a.salesno else isnull(c.salesno,'') end) salesno
 			,(case when isnull(a.salesno2,'')!='' then a.sales2 when isnull(a.salesno,'')!='' then a.sales else c.sales end)sales 
@@ -111,7 +113,7 @@ declare @result table(
 		  and (len(@t_cno)=0 or a.cno=@t_cno)
 	union all --預收
 	select '0' gno, '預' typea, a.noa, '999' noq, a.datea, (case when isnull(a.mon,'')='' then left(a.datea,6) else a.mon end),
-		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end), '' comp,'' serial, '' addr_comp, '' tel, '' productno, '預收扣抵' product, '' unit,
+		   (case when isnull(a.custno2,'')!='' then a.custno2 else a.custno end), '' comp,'' serial, '' addr_comp, '' tel, '' paytype, '' productno, '預收扣抵' product, '' unit,
 		   0 mount, 0 weight, 0 price, (case when a.typea!='1' then 1 else -1 end) * a.money, 0 money, 0 back, 0 tax, 0 total1, 0 pay, 0 unpay, 0 total2
 		   ,(case when isnull(a.salesno2,'')!='' then a.salesno2 when isnull(a.salesno,'')!='' then a.salesno else isnull(c.salesno,'') end) salesno
 			,(case when isnull(a.salesno2,'')!='' then a.sales2 when isnull(a.salesno,'')!='' then a.sales else c.sales end)sales 
@@ -154,7 +156,8 @@ set @t_total2 = 0
 
 
 insert @result
-select '1' gno, '' typea, '' noa, '' noq, '' datea, '' mon, custno, MAX(comp) comp,MAX(serial), MAX(addr) addr_comp, MAX(tel) tel, '' productno, '' product, '' unit, 0 mount, 0 weight, 0 price, 0 total, 
+select '1' gno, '' typea, '' noa, '' noq, '' datea, '' mon, custno, MAX(comp) comp,MAX(serial), MAX(addr) addr_comp, MAX(tel) tel,'' paytype
+, '' productno, '' product, '' unit, 0 mount, 0 weight, 0 price, 0 total, 
 sum(case when typea in ('1','折','預') then total else 0 end), sum(case when typea = '2' then total else 0 end)
 ,SUM(case when typea = '稅' then total else 0 end) , 0
 , isnull((select sum(ub.paysale) from umms ub where exists (select noa from @result where ub.vccno=noa and gno='0' and custno=a.custno)),0) --單據 
@@ -202,12 +205,12 @@ update a
 set unpay=isnull((select sum(total) from @tmp where custno=a.custno and gno='1'),0) 
 from @result a where a.gno='1' 
 
-insert into @result (gno,noa,noq,datea,mon,custno,comp,serial,tel,salesno,saless,total1,pay,unpay) 
-select gno,'','','','',a.custno,b.comp,b.serial,b.tel,'','',0,0,sum(total) 
+insert into @result (gno,noa,noq,datea,mon,custno,comp,serial,tel,paytype,salesno,saless,total1,pay,unpay) 
+select gno,'','','','',a.custno,b.comp,b.serial,b.tel,b.paytype,'','',0,0,sum(total) 
 from @tmp a 
 left join cust b on a.custno=b.noa 
 where custno not in (select custno from @result) and gno='1' and total!=0 
-group by gno,a.custno,b.comp,b.serial,b.tel
+group by gno,a.custno,b.comp,b.serial,b.tel,b.paytype
 
 update @result
 set salesno=(select top 1 (case when salesno2!='' then salesno2 else salesno end) from view_vcc order by datea desc )
@@ -228,7 +231,8 @@ outer apply (select custno,count(*)-1 counts from @result where custno=a.custno 
 where b.counts % 34 >26 and gno='1'
 
 select
-	gno,typea,noa,noq,datea,mon,custno,comp,serial,addr,tel,productno,replace(xproduct,'~#$',char(39)) xproduct,unit
+	gno,typea,noa,noq,datea,mon,custno,comp,serial,addr,replace(tel,'~#$',char(39)) tel,paytype
+	,productno,replace(xproduct,'~#$',char(39)) xproduct,unit
 	,(select top 1 saless from @result where custno=a.custno and saless!='' order by datea desc)saless
 	,reverse(substring(reverse(convert(nvarchar(30),CONVERT(money,mount),1)),0,30)) mount
 	,reverse(substring(reverse(convert(nvarchar(30),CONVERT(money,weight),1)),0,30)) weight
