@@ -277,6 +277,10 @@
                 $('#txtOdate').mask('999/99/99');
                 $('#txtOdate').datepicker();
                 
+                if(q_getPara('sys.project')=='yc'){						
+					$('#q_report div div').eq(3).hide();					
+				}
+                
                 if(isinvosystem=='2'){//沒有發票系統
 	                $('#Xshowinvono').hide();
 				}
