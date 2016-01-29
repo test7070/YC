@@ -117,7 +117,7 @@
 					if (t_custno.length > 0) {
 						//t_where = "isnull(notv,0)>0  and isnull(enda,0)!=1 and isnull(cancel,0)!=1 and exists (select * from view_orde where isnull(apv,'')!='' and noa=view_ordes"+r_accy+".noa) and " + (t_custno.length > 0 ? q_sqlPara("custno", t_custno) : "");
 						//104/07/06 邱小姐 數量重量箱數0的也要帶入
-						t_where = " (isnull(notv,0)>0 or (isnull(notv,0)=0 or ISNULL(lengthc,0)=0 or ISNULL(mount,0)=0 or ISNULL(weight,0)=0))  and isnull(enda,0)!=1 and isnull(cancel,0)!=1 and exists (select * from view_orde where isnull(apv,'')!='' and noa=view_ordes"+r_accy+".noa) and " + (t_custno.length > 0 ? q_sqlPara("custno", t_custno) : "");
+						t_where = " (isnull(notv,0)>0 or (isnull(notv,0)=0 or ISNULL(lengthc,0)=0 or ISNULL(mount,0)=0 or ISNULL(weight,0)=0))  and isnull(enda,0)!=1 and isnull(cancel,0)!=1 and exists (select * from view_orde where isnull(apv,'')!='' and noa=a.noa) and " + (t_custno.length > 0 ? q_sqlPara("custno", t_custno) : "");
 						if (!emp($('#txtOrdeno').val()))
 							t_where += " && charindex(noa,'" + $('#txtOrdeno').val() + "')>0";
 						t_where = t_where;
