@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 	<head>
-		<title></title>
+		<title> </title>
 		<script src="../script/jquery.min.js" type="text/javascript"></script>
 		<script src='../script/qj2.js' type="text/javascript"></script>
 		<script src='qset.js' type="text/javascript"></script>
@@ -154,6 +154,10 @@
 					if (!emp($('#txtCustno').val())) {
 						q_box("z_credit.aspx?" + r_userno + ";" + r_name + ";" + q_time + ";custno='" + $('#txtCustno').val() + "';" + r_accy + ";" + q_cur, 'ordei', "95%", "95%", q_getMsg('btnCredit'));
 					}
+				});
+				
+				$('#btnClose_div_stk').click(function() {
+					$('#div_stk').hide();
 				});
 				////-----------------以下為addr2控制事件---------------
 				$('#btnAddr2').mousedown(function(e) {
@@ -577,6 +581,42 @@
 						_btnDele();
 						Unlock(1);
 						break;
+					case 'msg_stk_all':
+						var as = _q_appendData("stkucc", "", true);
+						var rowslength=document.getElementById("table_stk").rows.length-3;
+							for (var j = 1; j < rowslength; j++) {
+								document.getElementById("table_stk").deleteRow(3);
+							}
+						var stk_row=0;
+						
+						var stkmount = 0;
+						for (var i = 0; i < as.length; i++) {
+							//倉庫庫存
+							if(dec(as[i].mount)!=0){
+								var tr = document.createElement("tr");
+								tr.id = "bbs_"+j;
+								tr.innerHTML = "<td id='assm_tdStoreno_"+stk_row+"'><input id='assm_txtStoreno_"+stk_row+"' type='text' class='txt c1' value='"+as[i].storeno+"' disabled='disabled'/></td>";
+								tr.innerHTML+="<td id='assm_tdStore_"+stk_row+"'><input id='assm_txtStore_"+stk_row+"' type='text' class='txt c1' value='"+as[i].store+"' disabled='disabled' /></td>";
+								tr.innerHTML+="<td id='assm_tdMount_"+stk_row+"'><input id='assm_txtMount_"+stk_row+"' type='text' class='txt c1 num' value='"+as[i].mount+"' disabled='disabled'/></td>";
+								var tmp = document.getElementById("stk_close");
+								tmp.parentNode.insertBefore(tr,tmp);
+								stk_row++;
+							}
+							//庫存總計
+							stkmount = stkmount + dec(as[i].mount);
+						}
+						var tr = document.createElement("tr");
+						tr.id = "bbs_"+j;
+						tr.innerHTML="<td colspan='2' id='stk_tdStore_"+stk_row+"' style='text-align: right;'><span id='stk_txtStore_"+stk_row+"' class='txt c1' >倉庫總計：</span></td>";
+						tr.innerHTML+="<td id='stk_tdMount_"+stk_row+"'><span id='stk_txtMount_"+stk_row+"' type='text' class='txt c1 num' > "+stkmount+"</span></td>";
+						var tmp = document.getElementById("stk_close");
+						tmp.parentNode.insertBefore(tr,tmp);
+						stk_row++;
+						
+						$('#div_stk').css('top',mouse_point.pageY-parseInt($('#div_stk').css('height')));
+						$('#div_stk').css('left',mouse_point.pageX-parseInt($('#div_stk').css('width')));
+						$('#div_stk').toggle();
+						break;
 					case q_name:
 						if (q_cur == 4)
 							q_Seek_gtPost();
@@ -846,20 +886,30 @@
 						
 						$('#txtMount_' + j).focusout(function() {
 							sum();
+							$('#btnClose_div_stk').click();
 						});
 						$('#txtTotal_' + j).focusout(function() {
 							sum();
 						});
 
-						$('#txtMount_' + j).focusin(function() {
+						$('#txtMount_' + j).focusin(function(e) {
 							if (q_cur == 1 || q_cur == 2) {
 								t_IdSeq = -1;
 								q_bodyId($(this).attr('id'));
 								b_seq = t_IdSeq;
 								if (!emp($('#txtProductno_' + b_seq).val())) {
 									//庫存
-									var t_where = "where=^^ ['" + q_date() + "','','"+$('#txtProductno_' + b_seq).val()+"')  ^^";
-									q_gt('calstk', t_where, 0, 0, 0, "msg_stk", r_accy);
+									//var t_where = "where=^^ ['" + q_date() + "','','"+$('#txtProductno_' + b_seq).val()+"')  ^^";
+									//q_gt('calstk', t_where, 0, 0, 0, "msg_stk", r_accy);
+									//顯示DIV 105/02/22
+									mouse_point=e;
+									mouse_point.pageY=$('#txtMount_'+b_seq).offset().top;
+									mouse_point.pageX=$('#txtMount_'+b_seq).offset().left;
+									document.getElementById("stk_productno").innerHTML = $('#txtProductno_' + b_seq).val();
+									document.getElementById("stk_product").innerHTML = $('#txtProduct_' + b_seq).val();
+									//庫存
+									var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "') ^^";
+									q_gt('calstk', t_where, 0, 0, 0, "msg_stk_all", r_accy);
 								}
 							}
 						});
@@ -1420,7 +1470,28 @@
 				</tr>
 			</table>
 		</div>
-		
+		<div id="div_stk" style="position:absolute; top:300px; left:400px; display:none; width:400px; background-color: #CDFFCE; border: 5px solid gray;">
+			<table id="table_stk" style="width:100%;" border="1" cellpadding='2'  cellspacing='0'>
+				<tr>
+					<td style="background-color: #f8d463;" align="center">產品編號</td>
+					<td style="background-color: #f8d463;" colspan="2" id='stk_productno'> </td>
+				</tr>
+				<tr>
+					<td style="background-color: #f8d463;" align="center">產品名稱</td>
+					<td style="background-color: #f8d463;" colspan="2" id='stk_product'> </td>
+				</tr>
+				<tr id='stk_top'>
+					<td align="center" style="width: 30%;">倉庫編號</td>
+					<td align="center" style="width: 45%;">倉庫名稱</td>
+					<td align="center" style="width: 25%;">倉庫數量</td>
+				</tr>
+				<tr id='stk_close'>
+					<td align="center" colspan='3'>
+						<input id="btnClose_div_stk" type="button" value="關閉視窗">
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div id="div_addr2" style="position:absolute; top:244px; left:500px; display:none; width:530px; background-color: #CDFFCE; border: 5px solid gray;">
 			<table id="table_addr2" style="width:100%;" border="1" cellpadding='2' cellspacing='0'>
 				<tr>
