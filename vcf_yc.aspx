@@ -310,7 +310,7 @@
                     t_imount = q_add(t_imount,q_float('txtMount_'+i));
                     t_iweight = q_add(t_iweight,q_float('txtWeight_'+i));
                     
-                    if (t_unit == 'KG' || t_unit == 'M2' || t_unit == 'M' || t_unit == '批' || t_unit == '公斤' || t_unit == '噸' || t_unit == '頓'){
+                    if (t_unit == 'KG' || t_unit == 'M2' || t_unit == 'M'  || t_unit == '公斤' || t_unit == '噸' || t_unit == '頓'){
                     	 t_money=q_add(t_money,q_mul(q_float('txtWeight_'+i),q_float('txtPrice_'+i)));
                     }else{
                     	t_money=q_add(t_money,q_mul(q_float('txtMount_'+i),q_float('txtPrice_'+i)));

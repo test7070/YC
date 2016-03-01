@@ -66,7 +66,7 @@
 					t_unit = $.trim($('#txtUnit_' + j).val()).toUpperCase();
 					t_mount = q_float('txtMount_' + j);
 					t_weight=+q_float('txtWeight_' + j);
-					if (t_unit == 'KG' || t_unit == 'M2' || t_unit == 'M' || t_unit == '批' || t_unit == '公斤' || t_unit == '噸' || t_unit == '頓') 
+					if (t_unit == 'KG' || t_unit == 'M2' || t_unit == 'M'  || t_unit == '公斤' || t_unit == '噸' || t_unit == '頓') 
 						$('#txtTotal_' + j).val(round(q_mul(q_float('txtPrice_' + j), dec(t_weight)), 0));
 					else
 						$('#txtTotal_' + j).val(round(q_mul(q_float('txtPrice_' + j), dec(t_mount)), 0));
