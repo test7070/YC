@@ -526,6 +526,7 @@
 							$('#txtDiscount').val(as[0].weight);
 							$('#txtCno').val(as[0].cno);
 							$('#txtAcomp').val(as[0].acomp);
+							$('#cmbStype').val(as[0].stype);
 						}
 						sum();
 						break;
