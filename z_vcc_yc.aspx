@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" >
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title></title>
+		<title> </title>
 		<script src="/../script/jquery.min.js" type="text/javascript"></script>
 		<script src='../script/qj2.js' type="text/javascript"></script>
 		<script src='qset.js' type="text/javascript"></script>
@@ -23,6 +23,7 @@
             var job = '';
             var sgroup = '';
             var isinvosystem = '';
+            var custtype = '';
 
             if (location.href.indexOf('?') < 0) {
                 location.href = location.href + "?;;;;100";
@@ -81,8 +82,18 @@
                             job = as[0].job;
                             sgroup = as[0].salesgroup;
                         }
-                        q_gf('', 'z_vcc_yc');
+                        q_gt('custtype', '', 0, 0, 0, "custtype");
                         break; 
+					case 'custtype':
+						var as = _q_appendData("custtype", "", true);
+						if (as[0] != undefined) {
+							custtype = "#non@全部";
+							for (i = 0; i < as.length; i++) {
+								custtype = custtype + (custtype.length > 0 ? ',' : '') + $.trim(as[i].noa) + '@' + $.trim(as[i].namea);
+							}
+						}
+						q_gf('', 'z_vcc_yc');
+						break;
                 }
             }
             
@@ -210,6 +221,10 @@
                     }, {
                         type : '6', //[39]//200000
                         name : 'ycustno'
+                    },{
+                        type : '5', //[40]//400000
+                        name : 'xcusttype',
+                        value : custtype.split(',')
                     }]
                 });
                 q_popAssign();
