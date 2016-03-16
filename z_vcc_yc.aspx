@@ -292,7 +292,7 @@
                 $('#txtOdate').mask(r_picd);
                 $('#txtOdate').datepicker();
                 
-                if(q_getPara('sys.project')=='yc'){						
+                if(q_getPara('sys.project').toUpperCase()=='YC'){						
 					$('#q_report div div').eq(3).hide();					
 				}
                 
