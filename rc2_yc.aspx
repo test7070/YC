@@ -435,7 +435,7 @@
 						if (as[0] != undefined) {
 							var rc2_money=0;
 							for (var i = 0; i < as.length; i++) {
-								rc2_money=rc2_money+dec(as[i].money);
+								rc2_money=rc2_money+((as[i].typea=='2'?-1:1)*dec(as[i].money));
 							}
 							if((paya_total-paya_discount-rc2_money-dec($('#txtMoney').val()))<0){
 								alert('【'+$('#txtPayano').val()+'】預付單號 金額超出'+Math.abs(paya_total-paya_discount-rc2_money-dec($('#txtMoney').val())));

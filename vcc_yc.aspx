@@ -639,7 +639,7 @@
 						if (as[0] != undefined) {
 							var vcc_money=0;
 							for (var i = 0; i < as.length; i++) {
-								vcc_money=vcc_money+dec(as[i].money);
+								vcc_money=vcc_money+((as[i].typea=='2'?-1:1)*dec(as[i].money));
 							}
 							if((umma_total-umma_discount-vcc_money-dec($('#txtMoney').val()))<0){
 								alert('【'+$('#txtUmmano').val()+'】預收單號 金額超出'+Math.abs(umma_total-umma_discount-vcc_money-dec($('#txtMoney').val())));
