@@ -1136,7 +1136,9 @@
 				$('#txtTax').val(FormatNumber(t_tax));
 				
 				if(!emp($('#txtUmmano').val())){
-					$('#txtTotal').val(FormatNumber(t_tax));
+					//$('#txtTotal').val(FormatNumber(t_tax));
+					//105/04/27有預收單號 稅額也不算
+					$('#txtTotal').val(0);
 				}else{
 					$('#txtTotal').val(FormatNumber(t_total));	
 				}
