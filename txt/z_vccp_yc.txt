@@ -140,6 +140,7 @@ z_vccp_yc02:--z_vccp_yc02
 		serial nvarchar(100),
 		sales nvarchar(100),
 		paytype nvarchar(100),
+		stype nvarchar(100),
 		
 		productno nvarchar(30),
 		product nvarchar(50),
@@ -162,6 +163,8 @@ z_vccp_yc02:--z_vccp_yc02
 	select '1' gno,ROW_NUMBER()over(partition by a.noa order by b.noq) recno
 	,a.cno,a.acomp,a.noa,b.noq,a.datea,a.custno,a.comp
 	,case when isnull(a.addr2,'')!='' then a.addr2 else a.addr end,a.tel,c.serial,a.sales,a.paytype
+	,case when a.stype='1' then '高雄廠' when a.stype='5' then '桃園廠' when a.stype='6' then '台中廠' 
+	when a.stype='2' then '代工' when a.stype='3' then '外銷' when a.stype='4' then '計畫生產' else '' end
 	
 	,b.productno,replace(b.product,'~#$',char(39)),b.unit
 	,case when @t_showweight='1' then b.mount else b.lengthc end
