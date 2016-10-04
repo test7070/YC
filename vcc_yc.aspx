@@ -93,8 +93,8 @@
 				q_cmbParse("combPay", q_getPara('vcc.paytype'));
 				q_cmbParse("cmbTrantype", q_getPara('sys.tran'));
 				q_cmbParse("combAddr", ' @ ');
-				var t_where = "where=^^ 1=1  ^^";
-				q_gt('custaddr', t_where, 0, 0, 0, "");
+				//var t_where = "where=^^ 1=1  ^^";
+				//q_gt('custaddr', t_where, 0, 0, 0, "");
 				$('#lblPrice').text('扣');
 				$('#lblPer').html('%&nbsp;&nbsp;');
 				
@@ -196,7 +196,7 @@
 
 				$('#txtCustno').change(function() {
 					if (!emp($('#txtCustno').val())) {
-						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'  ^^";
+						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "' and exists (select custno,post2,addr2 from view_vcc where datea>='"+q_cdn(q_date(),-183)+"' group by custno,post2,addr2 having post2=custaddr.post and addr2=custaddr.addr and custno=custaddr.noa) ^^";
 						q_gt('custaddr', t_where, 0, 0, 0, "");
 						var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 						q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
@@ -581,7 +581,7 @@
 						$('#txtDatea').focus();
 
 						if (!emp($('#txtCustno').val())) {
-							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "' ^^";
+							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "' and exists (select custno,post2,addr2 from view_vcc where datea>='"+q_cdn(q_date(),-183)+"' group by custno,post2,addr2 having post2=custaddr.post and addr2=custaddr.addr and custno=custaddr.noa) ^^";
 							q_gt('custaddr', t_where, 0, 0, 0, "");
 							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 							q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
@@ -883,8 +883,8 @@
 				$('#cmbTypea').val('1');
 				$('#txtDatea').focus();
 				$('#cmbTaxtype').val('1');
-				var t_where = "where=^^ 1=1  ^^";
-				q_gt('custaddr', t_where, 0, 0, 0, "");
+				//var t_where = "where=^^ 1=1  ^^";
+				//q_gt('custaddr', t_where, 0, 0, 0, "");
 				
 				$('#combAddr').text('');
 				q_cmbParse("combAddr", ' @ ');
@@ -1063,7 +1063,7 @@
 				switch (s1) {
 					case 'txtCustno':
 						if (!emp($('#txtCustno').val())) {
-							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "' ^^";
+							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "' and exists (select custno,post2,addr2 from view_vcc where datea>='"+q_cdn(q_date(),-183)+"' group by custno,post2,addr2 having post2=custaddr.post and addr2=custaddr.addr and custno=custaddr.noa) ^^";
 							q_gt('custaddr', t_where, 0, 0, 0, "");
 							var t_where = "where=^^ noa='" + $('#txtCustno').val() + "'^^";
 							q_gt('cust', t_where, 0, 0, 0, "custgetaddr");
