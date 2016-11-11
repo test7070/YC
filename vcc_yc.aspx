@@ -872,6 +872,22 @@
 				}
 				_bbsAssign();
 				HiddenTreat();
+				
+				$('#btnCopystore').unbind('click');
+				$('#btnCopystore').click(function() {
+					if(q_cur==1 || q_cur==2){
+						if(!emp($('#txtStoreno_0').val())){
+							var t_storeno=$('#txtStoreno_0').val();
+							var t_store=$('#txtStore_0').val();
+							for (var i = 1; i < q_bbsCount; i++) {
+								if(emp($('#txtStoreno_'+i).val()) && !emp($('#txtProductno_'+i).val())){
+									$('#txtStoreno_'+i).val(t_storeno);
+									$('#txtStore_'+i).val(t_store);
+								}
+							}
+						}
+					}
+				});
 			}
 
 			function btnIns() {
@@ -1429,7 +1445,10 @@
 					<td align="center" style="width:80px;"><a id='lblWeight_s'> </a></td>
 					<td align="center" style="width:80px;"><a id='lblPrice_s'> </a></td>
 					<td align="center" style="width:80px;"><a id='lblTotal_s'> </a></td>
-					<td align="center" style="width:120px;"><a id='lblStore_s'> </a></td>
+					<td align="center" style="width:120px;">
+						<a id='lblStore_s'> </a>
+						<input id="btnCopystore" type="button" value="≡">
+					</td>
 					<td align="center" style="width:170px;"><a id='lblMemo_s'> </a></td>
 					<td align="center" style="width:40px;"><a id='lblRecord_s'> </a></td>
 					<td align="center" style="width:40px;"><a id='lblStk_s'> </a></td>
