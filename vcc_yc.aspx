@@ -217,6 +217,12 @@
 					sum();
 				});
 				
+				$('#btnAddmemo').click(function() {
+					if(q_cur!=1 && q_cur!=2 && !emp($('#txtNoa').val())){
+						q_func('qtxt.query.updatememo_yc', 'vcc.txt,updatememo_yc,' + encodeURI($('#txtNoa').val())+';'+encodeURI($('#btnAddmemo').val()));
+					}
+				});
+				
 				/*if (isinvosystem)
 					$('.istax').hide();*/
 			}
@@ -1002,9 +1008,11 @@
 				if (t_para) {
 					$('#combAddr').attr('disabled', 'disabled');
 					$('#combAddr2').attr('disabled', 'disabled');
+					$('#btnAddmemo').removeAttr('disabled');
 				} else {
 					$('#combAddr').removeAttr('disabled');
 					$('#combAddr2').removeAttr('disabled');
+					$('#btnAddmemo').attr('disabled', 'disabled');
 				}
 				HiddenTreat();
 				//限制帳款月份的輸入 只有在備註的第一個字為*才能手動輸入
@@ -1163,6 +1171,19 @@
 					$('#txtTotal').val(FormatNumber(t_total));	
 				}
 			}
+			
+			function q_funcPost(t_func, result) {
+				switch(t_func) {
+					case 'qtxt.query.updatememo_yc':
+						var as = _q_appendData("tmp0", "", true, true);
+						if (as[0] != undefined) {
+							if($('#txtNoa').val()==as[0].noa){
+								$('#txtMemo').val(replaceAll(as[0].memo,'chr(10)','\n'))
+							}	
+						}
+						break;
+				}
+			};
 		</script>
 		<style type="text/css">
 			#dmain {
@@ -1329,12 +1350,11 @@
 				<table class="tbbm"  id="tbbm" style="width: 872px;">
 					<tr>
 						<td class="td1" style="width: 108px;"><span> </span><a id='lblType' class="lbl"> </a></td>
-						<td class="td2" style="width: 108px;"><select id="cmbTypea"> </select></td>
-						<td class="td3" style="width: 108px;">
-							<a id='lblStype' class="lbl" style="float: left;"> </a>
-							<span style="float: left;"> </span>
-							<select id="cmbStype"> </select>
+						<td class="td2" style="width: 108px;">
+							<select id="cmbTypea" style="width: 40px;"> </select>
+							<span> </span><a id='lblStype' class="lbl"> </a>
 						</td>
+						<td class="td3" style="width: 108px;"><select id="cmbStype" style="width: 100%"> </select></td>
 						<td class="td4" style="width: 108px;"><span> </span><a id='lblDatea' class="lbl"> </a></td>
 						<td class="td5" style="width: 108px;"><input id="txtDatea" type="text"  class="txt c1"/></td>
 						<td class="td6" style="width: 108px;"> </td>
@@ -1428,6 +1448,7 @@
 						<td class="td3"><input id="txtWorker2" type="text" class="txt c1"/></td>
 						<td class="td4"><span> </span><a id='lblAccc' class="lbl btn"> </a></td>
 						<td class="td5" colspan='2'><input id="txtAccno" type="text" class="txt c1"/></td>
+						<td class="td6"><input id="btnAddmemo" type="button" value="已附材證"/></td>
 					</tr>
 				</table>
 			</div>
