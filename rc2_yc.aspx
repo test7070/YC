@@ -474,9 +474,9 @@
 				var t_where = " kind!='2' &&";
 				if (t_tggno.length > 0) {
 					if (t_ordeno.length > 0)
-						t_where = "isnull(b.enda,0)=0 && isnull(cancel,'0')='0' && datea>='"+$('#txtDatea').val()+"' && isnull(view_ordcs.enda,0)=0 && " + (t_tggno.length > 0 ? q_sqlPara("tggno", t_tggno) : "") + "&& " + (t_ordeno.length > 0 ? q_sqlPara("noa", t_ordeno) : "");
+						t_where = "isnull(b.enda,0)=0 && isnull(b.cancel,'0')='0' && datea>='"+$('#txtDatea').val()+"' && isnull(view_ordcs.enda,0)=0 && " + (t_tggno.length > 0 ? q_sqlPara("tggno", t_tggno) : "") + "&& " + (t_ordeno.length > 0 ? q_sqlPara("noa", t_ordeno) : "");
 					else
-						t_where = "isnull(b.enda,0)=0 && isnull(cancel,'0')='0' && datea>='"+$('#txtDatea').val()+"' && isnull(view_ordcs.enda,0)=0 && " + (t_tggno.length > 0 ? q_sqlPara("tggno", t_tggno) : "");
+						t_where = "isnull(b.enda,0)=0 && isnull(b.cancel,'0')='0' && datea>='"+$('#txtDatea').val()+"' && isnull(view_ordcs.enda,0)=0 && " + (t_tggno.length > 0 ? q_sqlPara("tggno", t_tggno) : "");
 					t_where = t_where;
 				} else {
 					var t_err = q_chkEmpField([['txtTggno', q_getMsg('lblTgg')]]);
@@ -645,6 +645,23 @@
 				}
 				_bbsAssign();
 				HiddenTreat();
+				
+				$('#btnCopystore').unbind('click');
+				$('#btnCopystore').click(function() {
+					if(q_cur==1 || q_cur==2){
+						if(!emp($('#txtStoreno_0').val())){
+							var t_storeno=$('#txtStoreno_0').val();
+							var t_store=$('#txtStore_0').val();
+							for (var i = 1; i < q_bbsCount; i++) {
+								if(emp($('#txtStoreno_'+i).val()) && !emp($('#txtProductno_'+i).val())){
+									$('#txtStoreno_'+i).val(t_storeno);
+									$('#txtStore_'+i).val(t_store);
+								}
+							}
+						}
+					}
+				});
+				
 			}
 
 			function btnIns() {
@@ -1154,14 +1171,16 @@
 						<input class="btn" id="btnPlus" type="button" value='＋' style="font-weight: bold;" />
 					</td>
 					<td align="center" style="width:100px;"><a id='lblProductno'> </a></td>
-					<td align="center" style="width:300px;"><a id='lblProduct'> </a></td>
+					<td align="center" style="width:250px;"><a id='lblProduct'> </a></td>
 					<td align="center" style="width:95px;" class="isStyle"><a id='lblStyle'> </a></td>
 					<td align="center" style="width:40px;"><a id='lblUnit'> </a></td>
 					<td align="center" style="width:80px;"><a id='lblMount'> </a></td>
 					<td align="center" style="width:80px;"><a id='lblWeight_s'> </a></td>
 					<td align="center" style="width:80px;"><a id='lblPrices'> </a></td>
 					<td align="center" style="width:80px;"><a id='lblTotals'> </a></td>
-					<td align="center" style="width:80px;"><a id='lblStore_s'> </a></td>
+					<td align="center" style="width:100px;"><a id='lblStore_s'> </a>
+						<input id="btnCopystore" type="button" value="≡">
+					</td>
 					<td align="center"><a id='lblMemos'> </a></td>
 					<td align="center" style="width:40px;"><a id='lblRecord_s'> </a></td>
 					<td align="center" style="width:150px;"><a id='lblUno_s'> </a></td>
