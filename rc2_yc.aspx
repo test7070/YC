@@ -240,12 +240,6 @@
 					case 'custgetaddr':
 						var as = _q_appendData("view_rc2", "", true);
 						var t_item = " @ ";
-<<<<<<< HEAD
-						if (as[0] != undefined) {
-							for ( i = 0; i < as.length; i++) {
-								if(as[i].addr2.length!=0)
-									t_item = t_item + (t_item.length> 0 && as[i].addr2!=t_item ? ',' : '') + as[i].post2 + '@' + as[i].addr2;
-=======
 						
 						for (var i = 0; i < as.length; i++) {
 							var tt_item=t_item.split(',');
@@ -255,7 +249,6 @@
 									t_exists=true;
 									break;
 								}
->>>>>>> c83a3a4628068c519acfb4ed67b0ab6e0cad3f31
 							}
 							if(!t_exists)
 								t_item = t_item + (t_item.length > 0 ? ',' : '') + as[i].post2 + '@' + as[i].addr2;
