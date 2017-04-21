@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 	<head>
-		<title></title>
+		<title> </title>
 		<script src="../script/jquery.min.js" type="text/javascript"></script>
 		<script src='../script/qj2.js' type="text/javascript"></script>
 		<script src='qset.js' type="text/javascript"></script>
@@ -83,9 +83,6 @@
 				q_cmbParse("combPaytype", q_getPara('rc2.paytype'));
 				q_cmbParse("cmbTrantype", q_getPara('sys.tran'));
 				q_cmbParse("cmbTaxtype", q_getPara('sys.taxtype'));
-				q_cmbParse("combAddr", ' @ ');
-				/*var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and exists (select tggno,post2,addr2 from view_rc2 where datea>='"+q_cdn(q_date(),-183)+"' group by tggno,post2,addr2) ^^";
-				q_gt('custaddr', t_where, 0, 0, 0, "custgetaddr");*/
 				
 				//限制帳款月份的輸入 只有在備註的第一個字為*才能手動輸入					
 				$('#txtMemo').change(function(){
@@ -150,8 +147,8 @@
 				
 				$('#txtTggno').change(function() {
 					if (!emp($('#txtTggno').val())) {
-						var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and exists (select tggno,post2,addr2 from view_rc2 where datea>='"+q_cdn(q_date(),-183)+"' group by tggno,post2,addr2) ^^";
-						q_gt('view_rc2', t_where, 0, 0, 0, "custgetaddr");
+						var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and datea>='"+q_cdn(q_date(),-183)+"' ^^ stop=999";
+						q_gt('view_rc2', t_where, 0, 0, 0, "custgetaddr", r_accy);
 					}
 				});
 				$('#txtAddr').change(function() {
@@ -243,12 +240,20 @@
 					case 'custgetaddr':
 						var as = _q_appendData("view_rc2", "", true);
 						var t_item = " @ ";
-						if (as[0] != undefined) {
-							for ( i = 0; i < as.length; i++) {
-								if(as[i].addr2.length!=0 && as[i].addr2!=t_item)
-									t_item = t_item + (t_item.length > 0 ? ',' : '') + as[i].post2 + '@' + as[i].addr2;
+						
+						for (var i = 0; i < as.length; i++) {
+							var tt_item=t_item.split(',');
+							var t_exists=false;
+							for (var j=0;j<tt_item.length;j++){
+								if(as[i].post2 + '@' + as[i].addr2==tt_item[j]){
+									t_exists=true;
+									break;
+								}
 							}
+							if(!t_exists)
+								t_item = t_item + (t_item.length > 0 ? ',' : '') + as[i].post2 + '@' + as[i].addr2;
 						}
+						
 						document.all.combAddr.options.length = 0;
 						q_cmbParse("combAddr", t_item);
 						break;
@@ -307,8 +312,8 @@
 						Unlock(1);
 						$('#txtDatea').focus();
 						if (!emp($('#txtTggno').val())) {
-							var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and exists (select tggno,post2,addr2 from view_rc2 where datea>='"+q_cdn(q_date(),-183)+"' group by tggno,post2,addr2) ^^";
-							q_gt('view_rc2', t_where, 0, 0, "custaddr", "custgetaddr");
+							var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and datea>='"+q_cdn(q_date(),-183)+"' ^^ stop=999";
+							q_gt('view_rc2', t_where, 0, 0, 0, "custgetaddr", r_accy);
 						}
 						break;
 					case 'ordc':
@@ -696,20 +701,6 @@
 							if(q_cur==1 || q_cur==2)
 								$('#txtProduct_'+b_seq).val($('#txtProduct_'+b_seq).val()+'∮');
 						});
-						
-						$('#btnStk_' + i).mousedown(function(e) {
-							t_IdSeq = -1;
-							q_bodyId($(this).attr('id'));
-							b_seq = t_IdSeq;
-							if (!emp($('#txtProductno_' + b_seq).val()) && $("#div_stk").is(":hidden")) {
-								mouse_point=e;
-								document.getElementById("stk_productno").innerHTML = $('#txtProductno_' + b_seq).val();
-								document.getElementById("stk_product").innerHTML = $('#txtProduct_' + b_seq).val();
-								//庫存
-								var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "') ^^";
-								q_gt('calstk', t_where, 0, 0, 0, "msg_stk_all", r_accy);
-							}
-						});
 					}
 				}
 				_bbsAssign();
@@ -740,10 +731,7 @@
 				$('#txtDatea').val(q_date());
 				$('#txtDatea').focus();
 				$('#cmbTaxtype').val(1);
-				/*var t_where = "where=^^ 1=0 ^^ stop=100";
-				q_gt('custaddr', t_where, 0, 0, 0, "");*/
 				$('#combAddr').text('');
-				q_cmbParse("combAddr", ' @ ');
 			}
 			function btnModi() {
 				if (emp($('#txtNoa').val()))
@@ -881,7 +869,7 @@
 				switch (s1) {
 					case 'txtTggno':
 						if (!emp($('#txtTggno').val())) {
-							var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and exists (select tggno,post2,addr2 from view_rc2 where datea>='"+q_cdn(q_date(),-183)+"' group by tggno,post2,addr2) ^^";
+							var t_where = "where=^^ tggno='" + $('#txtTggno').val() + "' and datea>='"+q_cdn(q_date(),-183)+"' ^^  stop=999";
 							q_gt('view_rc2', t_where, 0, 0, 0, "custgetaddr");
 						}
 						break;
