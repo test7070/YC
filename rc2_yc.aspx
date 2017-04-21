@@ -245,8 +245,8 @@
 						var t_item = " @ ";
 						if (as[0] != undefined) {
 							for ( i = 0; i < as.length; i++) {
-								if(as[i].addr2.length!=0 && as[i].addr2!=t_item)
-									t_item = t_item + (t_item.length > 0 ? ',' : '') + as[i].post2 + '@' + as[i].addr2;
+								if(as[i].addr2.length!=0)
+									t_item = t_item + (t_item.length> 0 && as[i].addr2!=t_item ? ',' : '') + as[i].post2 + '@' + as[i].addr2;
 							}
 						}
 						document.all.combAddr.options.length = 0;
