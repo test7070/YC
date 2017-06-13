@@ -638,33 +638,33 @@
 							sum();
 						});
 						
-						$('#txtMount_' + i).focusout(function() {
-							if (q_cur == 1 || q_cur == 2)
-								sum();
-								$('#btnClose_div_stk').click();
-						});
-						
-						$('#txtMount_' + i).focusin(function(e) {
-							if (q_cur == 1 || q_cur == 2) {
-								t_IdSeq = -1;
-								q_bodyId($(this).attr('id'));
-								b_seq = t_IdSeq;
-								if (!emp($('#txtProductno_' + b_seq).val())) {
-									//庫存
-									//var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "')  ^^";
-									//q_gt('calstk', t_where, 0, 0, 0, "msg_stk", r_accy);
-									//顯示DIV 104/03/21
-									mouse_point=e;
-									mouse_point.pageY=$('#txtMount_'+b_seq).offset().top;
-									mouse_point.pageX=$('#txtMount_'+b_seq).offset().left;
-									document.getElementById("stk_productno").innerHTML = $('#txtProductno_' + b_seq).val();
-									document.getElementById("stk_product").innerHTML = $('#txtProduct_' + b_seq).val();
-									//庫存
-									var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "') ^^";
-									q_gt('calstk', t_where, 0, 0, 0, "msg_stk_all", r_accy);
-								}
-							}
-						});
+						$('#txtMount_' + j).focusout(function() {
+                            if (q_cur == 1 || q_cur == 2)
+                                sum();
+                                $('#btnClose_div_stk').click();
+                        });
+                        
+                        $('#txtMount_' + j).focusin(function(e) {
+                            if (q_cur == 1 || q_cur == 2) {
+                                t_IdSeq = -1;
+                                q_bodyId($(this).attr('id'));
+                                b_seq = t_IdSeq;
+                                if (!emp($('#txtProductno_' + b_seq).val())) {
+                                    //庫存
+                                    //var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "')  ^^";
+                                    //q_gt('calstk', t_where, 0, 0, 0, "msg_stk", r_accy);
+                                    //顯示DIV 104/03/21
+                                    mouse_point=e;
+                                    mouse_point.pageY=$('#txtMount_'+b_seq).offset().top;
+                                    mouse_point.pageX=$('#txtMount_'+b_seq).offset().left;
+                                    document.getElementById("stk_productno").innerHTML = $('#txtProductno_' + b_seq).val();
+                                    document.getElementById("stk_product").innerHTML = $('#txtProduct_' + b_seq).val();
+                                    //庫存
+                                    var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "') ^^";
+                                    q_gt('calstk', t_where, 0, 0, 0, "msg_stk_all", r_accy);
+                                }
+                            }
+                        });
 						
 						$('#txtWeight_' + j).change(function() {
 							sum();
@@ -694,6 +694,7 @@
 							var n = replaceAll($(this).attr('id'), 'btnRecord_', '');
 							q_box("z_rc2record.aspx?" + r_userno + ";" + r_name + ";" + q_time + ";tgg=" + $('#txtTggno').val() + "&product=" + $('#txtProductno_' + n).val() + ";" + r_accy, 'z_vccstp', "95%", "95%", q_getMsg('popPrint'));
 						});
+						
 						$('#btnS1_'+j).click(function() {
 							t_IdSeq = -1;
 							q_bodyId($(this).attr('id'));
@@ -701,6 +702,20 @@
 							if(q_cur==1 || q_cur==2)
 								$('#txtProduct_'+b_seq).val($('#txtProduct_'+b_seq).val()+'∮');
 						});
+						
+						$('#btnStk_' + j).mousedown(function(e) {
+                            t_IdSeq = -1;
+                            q_bodyId($(this).attr('id'));
+                            b_seq = t_IdSeq;
+                            if (!emp($('#txtProductno_' + b_seq).val()) && $("#div_stk").is(":hidden")) {
+                                mouse_point=e;
+                                document.getElementById("stk_productno").innerHTML = $('#txtProductno_' + b_seq).val();
+                                document.getElementById("stk_product").innerHTML = $('#txtProduct_' + b_seq).val();
+                                //庫存
+                                var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "') ^^";
+                                q_gt('calstk', t_where, 0, 0, 0, "msg_stk_all", r_accy);
+                            }
+                        });
 					}
 				}
 				_bbsAssign();
