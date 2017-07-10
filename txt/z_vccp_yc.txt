@@ -1,10 +1,11 @@
 z_vccp_yc01:--z_vccp_yc01	
 	SET QUOTED_IDENTIFIER OFF
-	declare @t_noa nvarchar(20) = case when '#non'=[1] then '' else [1] end
-	declare @t_bdate nvarchar(20) = case when '#non'=[2] then '' else [2] end
-	declare @t_edate nvarchar(20) = case when '#non'=[3] then char(255) else [3] end
-	declare @t_showprice nvarchar(20) = case when '#non' = [11] then '0' else [11] end
-	declare @t_showweight nvarchar(20) = case when '#non' = [12] then '0' else [12] end
+	declare @t_bdate nvarchar(20) = case when '#non'=[4] then '' else [4] end
+	declare @t_edate nvarchar(20) = case when '#non'=[5] then char(255) else [5] end
+	declare @t_showprice nvarchar(20) = case when '#non' = [13] then '0' else [13] end
+	declare @t_showweight nvarchar(20) = case when '#non' = [14] then '0' else [14] end
+	declare @t_bnoa nvarchar(20) = case when '#non'=[2] then '' else [2] end
+	declare @t_enoa nvarchar(20) = case when '#non'=[3] then '' else [3] end
 	--------------------------------------------------------------
 	declare @tmp table(
 		gno nvarchar(10),
@@ -36,7 +37,6 @@ z_vccp_yc01:--z_vccp_yc01
 		ttotal float,
 		worker nvarchar(50)
 	)
-		
 	insert into @tmp
 	select case when @t_showweight='1' then '2' else '4' end gno,
 	ROW_NUMBER()over(partition by a.noa order by b.noq) recno
@@ -46,8 +46,8 @@ z_vccp_yc01:--z_vccp_yc01
 	,b.mount,b.weight,b.price,b.total
 	,a.money,a.tax,isnull(a.discount,0),a.money+a.tax,a.worker
 	from view_vcc a
-	left join view_vccs b on a.noa=b.noa 
-	where (len(@t_noa)=0 or @t_noa=a.noa)
+	left join view_vccs b on a.noa=b.noa
+	where a.noa between @t_bnoa and @t_enoa
 	and ISNULL(a.datea,'') between @t_bdate and @t_edate
 
 ------------------------------------------------------
@@ -107,9 +107,9 @@ z_vccp_yc01:--z_vccp_yc01
 	select 
 	case when typea='1' then '出貨單' else '退貨單' end typea
 	,cast(productno as varchar(14)) productno
-	,dbo.getComma(mount,[6]) mount
-	,dbo.getComma(weight,[7]) weight
-	,dbo.getComma(price,[8]) price
+	,dbo.getComma(mount,[8]) mount
+	,dbo.getComma(weight,[9]) weight
+	,dbo.getComma(price,[10]) price
 	,dbo.getComma(money,0) money
 	,dbo.getComma(tmoney,0) tmoney
 	,dbo.getComma(ttax,0) ttax
@@ -121,9 +121,10 @@ z_vccp_yc01:--z_vccp_yc01
 ------------------------------------------------------------------------------------------------------------------------------------------
 z_vccp_yc02:--z_vccp_yc02	
 	SET QUOTED_IDENTIFIER OFF
-	declare @t_noa nvarchar(20) = case when '#non'=[1] then '' else [1] end
-	declare @t_showprice nvarchar(20) = case when '#non' = [11] then '0' else [11] end
-	declare @t_showweight nvarchar(20) = case when '#non' = [12] then '0' else [12] end
+	declare @t_bnoa nvarchar(20) = case when '#non'=[2] then '' else [2] end
+	declare @t_enoa nvarchar(20) = case when '#non'=[3] then '' else [3] end
+	declare @t_showprice nvarchar(20) = case when '#non' = [13] then '0' else [13] end
+	declare @t_showweight nvarchar(20) = case when '#non' = [14] then '0' else [14] end
 	--------------------------------------------------------------
 	declare @tmp table(
 		gno nvarchar(10),
@@ -175,7 +176,7 @@ z_vccp_yc02:--z_vccp_yc02
 	from view_vcc a
 	left join view_vccs b on a.noa=b.noa 
 	left join cust c on a.custno=c.noa
-	where @t_noa=a.noa
+	where a.noa between @t_bnoa and @t_enoa
 
 ------------------------------------------------------------------------
 	declare @counts int 
