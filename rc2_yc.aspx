@@ -46,7 +46,14 @@
 				q_gt('acomp', 'stop=1 ', 0, 0, 0, "cno_acomp");
 				//判斷是否有買發票系統
 				//q_gt('ucca', 'stop=1 ', 0, 0, 0, "ucca_invo");
-			});
+			}).mousedown(function (e) {
+		        if (!$('#div_row').is(':hidden')) {
+		            if (mouse_div) {
+		                $('#div_row').hide();
+		            }
+		            mouse_div = true;
+		        }
+		    });
 			function main() {
 				if (dataErr) {
 					dataErr = false;
@@ -186,6 +193,21 @@
 				$('#btnClose_div_stk').click(function() {
 					$('#div_stk').hide();
 				});
+				
+				//上方插入空白行
+		        $('#lblTop_row').mousedown(function (e) {
+		            if (e.button == 0) {
+		                mouse_div = false;
+		                q_bbs_addrow(row_bbsbbt, row_b_seq, 0);
+		            }
+		        });
+		        //下方插入空白行
+		        $('#lblDown_row').mousedown(function (e) {
+		            if (e.button == 0) {
+		                mouse_div = false;
+		                q_bbs_addrow(row_bbsbbt, row_b_seq, 1);
+		            }
+		        });
 			}
 			function q_boxClose(s2) {
 				var ret;
@@ -619,7 +641,21 @@
 					if (!$('#btnMinus_' + j).hasClass('isAssign')) {
 						$('#btnMinus_' + j).click(function() {
 							btnMinus($(this).attr('id'));
-						});
+						}).mousedown(function (e) {
+		                    if (e.button == 2) {
+		                        mouse_div = false;
+		                        ////////////控制顯示位置
+		                        $('#div_row').css('top', e.pageY);
+		                        $('#div_row').css('left', e.pageX);
+		                        ////////////
+		                        t_IdSeq = -1;
+		                        q_bodyId($(this).attr('id'));
+		                        b_seq = t_IdSeq;
+		                        $('#div_row').show();
+		                        row_b_seq = b_seq;
+		                        row_bbsbbt = 'bbs';
+		                    }
+		                });
 						$('#txtUnit_' + j).change(function() {
 							t_IdSeq = -1;
 							q_bodyId($(this).attr('id'));
@@ -823,8 +859,16 @@
 				_readonly(t_para, empty);
 				if (t_para) {
 					$('#combAddr').attr('disabled', 'disabled');
+					//恢復滑鼠右鍵
+		            document.oncontextmenu = function () {
+		                return true;
+		            }
 				} else {
 					$('#combAddr').removeAttr('disabled');
+					//防滑鼠右鍵
+		            document.oncontextmenu = function () {
+		                return false;
+		            }
 				}
 				HiddenTreat();
 				
@@ -962,6 +1006,42 @@
 					$('#txtTotal').val(FormatNumber(t_total));	
 				}
 			}
+			
+			var mouse_div = true; //控制滑鼠消失div
+		    var row_bbsbbt = ''; //判斷是bbs或bbt增加欄位
+		    var row_b_seq = ''; //判斷第幾個row
+		    //插入欄位
+		    function q_bbs_addrow(bbsbbt, row, topdown) {
+		        //取得目前行
+		        var rows_b_seq = dec(row) + dec(topdown);
+		        if (bbsbbt == 'bbs') {
+		            q_gridAddRow(bbsHtm, 'tbbs', 'txtNo2', 1);
+		            //目前行的資料往下移動
+		            for (var i = q_bbsCount - 1; i >= rows_b_seq; i--) {
+		                for (var j = 0; j < fbbs.length; j++) {
+		                    if (i != rows_b_seq)
+		                        $('#' + fbbs[j] + '_' + i).val($('#' + fbbs[j] + '_' + (i - 1)).val());
+		                    else
+		                        $('#' + fbbs[j] + '_' + i).val('');
+		                }
+		            }
+		        }
+		        if (bbsbbt == 'bbt') {
+		            q_gridAddRow(bbtHtm, 'tbbt', fbbt, 1, '', '', '', '__');
+		            //目前行的資料往下移動
+		            for (var i = q_bbtCount - 1; i >= rows_b_seq; i--) {
+		                for (var j = 0; j < fbbt.length; j++) {
+		                    if (i != rows_b_seq)
+		                        $('#' + fbbt[j] + '__' + i).val($('#' + fbbt[j] + '__' + (i - 1)).val());
+		                    else
+		                        $('#' + fbbt[j] + '__' + i).val('');
+		                }
+		            }
+		        }
+		        $('#div_row').hide();
+		        row_bbsbbt = '';
+		        row_b_seq = '';
+		    }
 		</script>
 		<style type="text/css">
 			#dmain {
@@ -1100,9 +1180,36 @@
 				text-align: center;
 				border: 2px lightgrey double;
 			}
+			#div_row{
+				display:none;
+				width:750px;
+				background-color: #ffffff;
+				position: absolute;
+				left: 20px;
+				z-index: 50;
+			}
+			.table_row tr td .lbl.btn {
+                color: #000000;
+                font-weight: bolder;
+                font-size: medium;
+                cursor: pointer;
+            }
+            .table_row tr td .lbl.btn:hover {
+                color: #FF8F19;
+            }
 		</style>
 	</head>
-	<body>		
+	<body>
+		<div id="div_row" style="position:absolute; top:300px; left:500px; display:none; width:150px; background-color: #ffffff; ">
+			<table id="table_row"  class="table_row" style="width:100%;" border="1" cellpadding='1'  cellspacing='0'>
+				<tr>
+					<td align="center" ><a id="lblTop_row" class="lbl btn">上方插入空白行</a></td>
+				</tr>
+				<tr>
+					<td align="center" ><a id="lblDown_row" class="lbl btn">下方插入空白行</a></td>
+				</tr>
+			</table>
+		</div>
 		<div id="div_stk" style="position:absolute; top:300px; left:400px; display:none; width:400px; background-color: #CDFFCE; border: 5px solid gray;">
 			<table id="table_stk" style="width:100%;" border="1" cellpadding='2'  cellspacing='0'>
 				<tr>
