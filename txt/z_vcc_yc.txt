@@ -316,7 +316,7 @@ declare @tmp table(
 	ttotal float
 )
 insert into @tmp
-	select '99',a.salesno,a.sales,b.productno,b.product,
+	select '99',a.cno,a.acomp,b.productno,b.product,
 		case when substring(a.datea,5,2)='01' then sum((case when a.typea='1' then 1 else -1 end)*b.mount) else 0 end,
 		case when substring(a.datea,5,2)='02' then sum((case when a.typea='1' then 1 else -1 end)*b.mount) else 0 end,
 		case when substring(a.datea,5,2)='03' then sum((case when a.typea='1' then 1 else -1 end)*b.mount) else 0 end,
@@ -343,18 +343,18 @@ insert into @tmp
 		case when substring(a.datea,5,2)='11' then sum((case when a.typea='1' then 1 else -1 end)*b.weight) else 0 end,
 		case when substring(a.datea,5,2)='12' then sum((case when a.typea='1' then 1 else -1 end)*b.weight) else 0 end,
 		0 wtotal,
-		case when substring(a.datea,5,2)='01' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='02' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='03' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='04' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='05' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='06' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='07' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='08' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='09' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='10' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='11' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
-		case when substring(a.datea,5,2)='12' then sum((case when a.typea='1' then 1 else -1 end)*b.lengthc) else 0 end,
+		case when substring(a.datea,5,2)='01' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='02' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='03' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='04' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='05' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='06' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='07' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='08' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='09' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='10' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='11' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
+		case when substring(a.datea,5,2)='12' then sum(CEILING((case when a.typea='1' then 1 else -1 end)*b.lengthc/nullif(c.stdmount,0))) else 0 end,
 		0 ctotal,
 		case when substring(a.datea,5,2)='01' then sum((case when a.typea='1' then 1 else -1 end)*round(b.total/(case when a.taxtype='3' then 1.05 else 1 end),0)) else 0 end,
 		case when substring(a.datea,5,2)='02' then sum((case when a.typea='1' then 1 else -1 end)*round(b.total/(case when a.taxtype='3' then 1.05 else 1 end),0)) else 0 end,
@@ -371,11 +371,12 @@ insert into @tmp
 		0 ttotal
 	from view_vcc a
 	left join view_vccs b on a.noa=b.noa
+	left join ucc c on b.productno=c.noa
 	where (left(a.datea,3) = @t_year) and 
 			 (a.custno between @t_bcustno and @t_ecustno) and
 			 (b.productno between @t_bproductno and @t_eproductno) and
-			 (a.salesno between @t_bsalesno and @t_esalesno) and (len(@t_vccstype)=0 or @t_vccstype=a.stype)
-	group by a.salesno,a.sales,b.productno,b.product,substring(a.datea,5,2)
+			 (len(@t_vccstype)=0 or @t_vccstype=a.stype)
+	group by a.cno,a.acomp,b.productno,b.product,substring(a.datea,5,2)
 	
 insert into @tmp
 	select '1',a.salesno,a.saless,a.productno,a.products,
