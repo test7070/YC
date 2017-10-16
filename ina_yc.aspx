@@ -107,7 +107,7 @@
                             }
                         var stk_row=0;
                         
-                        var stkmount = 0;
+                        var stkmount = 0,stkweight = 0;
                         for (var i = 0; i < as.length; i++) {
                             //倉庫庫存
                             if(dec(as[i].mount)!=0){
@@ -116,17 +116,20 @@
                                 tr.innerHTML = "<td id='assm_tdStoreno_"+stk_row+"'><input id='assm_txtStoreno_"+stk_row+"' type='text' class='txt c1' value='"+as[i].storeno+"' disabled='disabled'/></td>";
                                 tr.innerHTML+="<td id='assm_tdStore_"+stk_row+"'><input id='assm_txtStore_"+stk_row+"' type='text' class='txt c1' value='"+as[i].store+"' disabled='disabled' /></td>";
                                 tr.innerHTML+="<td id='assm_tdMount_"+stk_row+"'><input id='assm_txtMount_"+stk_row+"' type='text' class='txt c1 num' value='"+as[i].mount+"' disabled='disabled'/></td>";
+                                tr.innerHTML+="<td id='assm_tdWeight_"+stk_row+"'><input id='assm_txtWeight_"+stk_row+"' type='text' class='txt c1 num' value='"+as[i].weight+"' disabled='disabled'/></td>";
                                 var tmp = document.getElementById("stk_close");
                                 tmp.parentNode.insertBefore(tr,tmp);
                                 stk_row++;
                             }
                             //庫存總計
                             stkmount = stkmount + dec(as[i].mount);
+                            stkweight = stkweight + dec(as[i].weight);
                         }
                         var tr = document.createElement("tr");
                         tr.id = "bbs_"+j;
                         tr.innerHTML="<td colspan='2' id='stk_tdStore_"+stk_row+"' style='text-align: right;'><span id='stk_txtStore_"+stk_row+"' class='txt c1' >倉庫總計：</span></td>";
                         tr.innerHTML+="<td id='stk_tdMount_"+stk_row+"'><span id='stk_txtMount_"+stk_row+"' type='text' class='txt c1 num' > "+stkmount+"</span></td>";
+                        tr.innerHTML+="<td id='stk_tdWeight_"+stk_row+"'><span id='stk_txtWeight_"+stk_row+"' type='text' class='txt c1 num' > "+stkweight+"</span></td>";
                         var tmp = document.getElementById("stk_close");
                         tmp.parentNode.insertBefore(tr,tmp);
                         stk_row++;
@@ -225,6 +228,33 @@
 						$('#txtWeight_' + j).change(function() {
 							sum();
 						});
+						
+						$('#txtWeight_' + j).focusout(function() {
+                            sum();
+                            $('#btnClose_div_stk').click();
+                        });
+                        
+                        $('#txtWeight_' + j).focusin(function(e) {
+                            if (q_cur == 1 || q_cur == 2) {
+                                t_IdSeq = -1;
+                                q_bodyId($(this).attr('id'));
+                                b_seq = t_IdSeq;
+                                if (!emp($('#txtProductno_' + b_seq).val())) {
+                                    //庫存
+                                    //var t_where = "where=^^ ['" + q_date() + "','','"+$('#txtProductno_' + b_seq).val()+"')  ^^";
+                                    //q_gt('calstk', t_where, 0, 0, 0, "msg_stk", r_accy);
+                                    //顯示DIV 105/02/22
+                                    mouse_point=e;
+                                    mouse_point.pageY=$('#txtMount_'+b_seq).offset().top;
+                                    mouse_point.pageX=$('#txtMount_'+b_seq).offset().left;
+                                    document.getElementById("stk_productno").innerHTML = $('#txtProductno_' + b_seq).val();
+                                    document.getElementById("stk_product").innerHTML = $('#txtProduct_' + b_seq).val();
+                                    //庫存
+                                    var t_where = "where=^^ ['" + q_date() + "','','" + $('#txtProductno_' + b_seq).val() + "') ^^";
+                                    q_gt('calstk', t_where, 0, 0, 0, "msg_stk_all", r_accy);
+                                }
+                            }
+                        });
 						
 						$('#txtMweight_' + j).change(function() {
 							sum();
@@ -518,22 +548,23 @@
 	<body>
 		<!--#include file="../inc/toolbar.inc"-->
 		<div id="div_stk" style="position:absolute; top:300px; left:400px; display:none; width:400px; background-color: #CDFFCE; border: 5px solid gray;">
-            <table id="table_stk" style="width:100%;" border="1" cellpadding='2'  cellspacing='0'>
+            <table id="table_stk" style="width:100%;" border="1" cellpadding='3'  cellspacing='0'>
                 <tr>
                     <td style="background-color: #f8d463;" align="center">產品編號</td>
-                    <td style="background-color: #f8d463;" colspan="2" id='stk_productno'> </td>
+                    <td style="background-color: #f8d463;" colspan="3" id='stk_productno'> </td>
                 </tr>
                 <tr>
                     <td style="background-color: #f8d463;" align="center">產品名稱</td>
-                    <td style="background-color: #f8d463;" colspan="2" id='stk_product'> </td>
+                    <td style="background-color: #f8d463;" colspan="3" id='stk_product'> </td>
                 </tr>
                 <tr id='stk_top'>
-                    <td align="center" style="width: 30%;">倉庫編號</td>
-                    <td align="center" style="width: 45%;">倉庫名稱</td>
+                    <td align="center" style="width: 19%;">倉庫編號</td>
+                    <td align="center" style="width: 25%;">倉庫名稱</td>
                     <td align="center" style="width: 25%;">倉庫數量</td>
+                    <td align="center" style="width: 25%;">倉庫重量</td>
                 </tr>
                 <tr id='stk_close'>
-                    <td align="center" colspan='3'>
+                    <td align="center" colspan='4'>
                         <input id="btnClose_div_stk" type="button" value="關閉視窗">
                     </td>
                 </tr>
