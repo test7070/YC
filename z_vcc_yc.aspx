@@ -269,8 +269,8 @@
                 $('#Xmemo').removeClass('a2').addClass('a1');
                 $('#txtXmemo').css('width', '85%');
                 $('#Xgroupano select').css('width', '150px');
-                $('.q_report .report').css('width', '420px');
-                $('.q_report .report div').css('width', '200px');
+               // $('.q_report .report').css('width', '420px');
+               // $('.q_report .report div').css('width', '200px');
                 
                 $('#Xshowinvono').css('width', '300px').css('height', '30px');
                 $('#Xshowinvono .label').css('width','0px');
