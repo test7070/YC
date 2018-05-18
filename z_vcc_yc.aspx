@@ -225,6 +225,10 @@
                         type : '5', //[40]//400000
                         name : 'xcusttype',
                         value : custtype.split(',')
+                    }, {
+                        type : '5',
+                        name : 'xpaytype', //[41]
+                        value : q_getPara('vcc.paytype').split(',')
                     }]
                 });
                 q_popAssign();
